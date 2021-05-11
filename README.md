@@ -12,8 +12,8 @@ Requirements and Installation:
 
 Run Test Suit From CMD:  
   
-  Firefox:
-  robot --variable browser:firefox scenarios.robot
+    Firefox:
+    robot --variable browser:firefox scenarios.robot
   
-  Chrome:
-  robot --variable browser:chrome scenarios.robot
+    Chrome:
+    robot --variable browser:chrome scenarios.robot
