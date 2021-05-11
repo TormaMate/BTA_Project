@@ -107,6 +107,8 @@ Check Product Quantity In The Cart    [Arguments]    @{itemPrices}
 
 
 Validate Search    [Arguments]    ${search}
+    [Documentation]    It checks if the results of the given srearch term are correct
+    ...    If not, it returns an error
     @{elements}=    Get WebElements    ${a_results}
     ${listLength}=    Get Length    ${elements}
     FOR    ${i}    IN RANGE    ${listLength}
@@ -114,7 +116,8 @@ Validate Search    [Arguments]    ${search}
            Should Start With    ${titleAttr}    ${search}
     END
     
-Add Items  [Arguments]    @{itemPrices}  
+Add Items  [Arguments]    @{itemPrices}
+    [Documentation]    This function adds the items to the cart based on @{itemPrices}, which contains some of the prices of the popular products
     ${itemListLength}=    Get Length    ${itemPrices}
     
     FOR    ${i}    IN RANGE    ${itemListLength}
@@ -130,6 +133,9 @@ Add Items  [Arguments]    @{itemPrices}
         
         
 Calculate Prices    [Arguments]    @{itemPrices}
+  [Documentation]
+  ...    Calculate and return the sum of items in shoping cart 
+  ...     
   ${totalPrice} =    set variable    ${0}
   ${productPrice} =    set variable    ${0}
   ${itemListLength}=    Get Length    ${itemPrices}
@@ -140,6 +146,9 @@ Calculate Prices    [Arguments]    @{itemPrices}
   ${TOTAL_PRICE}    Set Global Variable    ${totalPrice}
   
 Check Product Quantity    [Arguments]    @{prices}
+    [Documentation]
+    ...    It checks if the displayed quantity of the items and the amount of @{prices} elements are the same.
+    ...    If not, it returns an error
     ${itemListLength}=    Get Length    ${prices}
     Page Should Contain Element    //span[text()='${itemListLength}' and @class='ajax_cart_quantity']
     
