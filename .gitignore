@@ -1,1 +1,6 @@
 /libspecs/
+log.html
+output.xml
+report.html
+*.log
+*.png
