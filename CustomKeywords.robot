@@ -91,7 +91,7 @@ Click Popular Button
     Click Element    ${btn_popular}
 
 Add Items & Check Message And Quantit    [Arguments]    @{itemPrices}    
-    Add Items    @{itemPrices}
+    Add Items and Check    @{itemPrices}
     
 Click Cart
     Click Element    ${btn_shoping_cart}
@@ -107,7 +107,8 @@ Check Product Quantity In The Cart    [Arguments]    @{itemPrices}
 
 
 Validate Search    [Arguments]    ${search}
-    [Documentation]    It checks if the results of the given srearch term are correct
+    [Documentation]
+    ...    It checks if the results of the given search term are relevant
     ...    If not, it returns an error
     @{elements}=    Get WebElements    ${a_results}
     ${listLength}=    Get Length    ${elements}
@@ -116,8 +117,14 @@ Validate Search    [Arguments]    ${search}
            Should Start With    ${titleAttr}    ${search}
     END
     
-Add Items  [Arguments]    @{itemPrices}
-    [Documentation]    This function adds the items to the cart based on @{itemPrices}, which contains some of the prices of the popular products
+Add Items and Check  [Arguments]    @{itemPrices}
+    [Documentation]
+    ...    1. The keyword gets a list of prices
+    ...    2. Each prices belong to one of the popular items
+    ...    3. As the for loop is looping through the list of the prices the xpath changes dynamically and refers to the belonging item.
+    ...    4. The items will be added to the cart
+    ...    5. It cheks if the right quantity of items are displayed
+    ...    6. It checks if the "successfull" message is displayed
     ${itemListLength}=    Get Length    ${itemPrices}
     
     FOR    ${i}    IN RANGE    ${itemListLength}
@@ -134,7 +141,7 @@ Add Items  [Arguments]    @{itemPrices}
         
 Calculate Prices    [Arguments]    @{itemPrices}
   [Documentation]
-  ...    Calculate and return the sum of items in shoping cart 
+  ...   It Calculates and returns the sum of the item prices added to the shoping cart 
   ...     
   ${totalPrice} =    set variable    ${0}
   ${productPrice} =    set variable    ${0}
@@ -145,10 +152,9 @@ Calculate Prices    [Arguments]    @{itemPrices}
   END
   ${TOTAL_PRICE}    Set Global Variable    ${totalPrice}
   
-Check Product Quantity    [Arguments]    @{prices}
+Check Product Quantity   [Arguments]    @{prices}
     [Documentation]
-    ...    It checks if the displayed quantity of the items and the amount of @{prices} elements are the same.
-    ...    If not, it returns an error
+    ...    Checks if the displayed quantity of the products is correct.
     ${itemListLength}=    Get Length    ${prices}
     Page Should Contain Element    //span[text()='${itemListLength}' and @class='ajax_cart_quantity']
     
