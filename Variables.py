@@ -34,6 +34,9 @@ a_shoping_cart="//a[@title='View my shopping cart']"
 #Shoping Cart
 a_cart_title="//h1[@id='cart_title']"
 span_product_count="//span[@class='ajax_cart_quantity']"
+txt_quantity="//input[./ancestor::td/preceding-sibling::td/descendant::a/text()='::PLACEHOLDER::']"
+table_cart_summary="//table[@id='cart_summary']"
+span_cart_price="//span[@class='price' and ./ancestor::td/@data-title='Unit price' and ./ancestor::td/preceding-sibling::td/descendant::a/text()='::PLACEHOLDER::']"
 
 #Item Details
 btn_details="//span[text()='More' and ./ancestor::div/preceding-sibling::h5/child::a/@title='::PLACEHOLDER::']"

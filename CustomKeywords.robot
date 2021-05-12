@@ -6,7 +6,7 @@ Library    Collections
 Variables    Variables.py
 
 *** Variables ***
-
+@{PRICES}
 *** Keywords ***
 Input Email    [Arguments]   ${string}
     Input Text    ${txt_email}    ${string}
@@ -112,12 +112,31 @@ Navigate To The Cart
     Wait Until Element Is Visible    ${a_cart_title}
     
 
-Product Quantity Should Be Correct In Cart    [Arguments]    &{ITEMS}
+Product Quantity Should Be The Same In Cart    [Arguments]    &{ITEMS}
+    @{itemsQuantity}=    Get Dictionary Values    ${ITEMS}    sort_keys=False
+    @{itemsName}=    Get Dictionary Keys    ${ITEMS}
+    ${listLength}=    Get Length    ${itemsQuantity}
+    FOR    ${i}    IN RANGE    ${listLength}
+      ${textItemQuantity}=    Replace String    ${txt_quantity}    ::PLACEHOLDER::    ${itemsName}[${i}]
+      ${cartQuantity}=    Get Element Attribute    ${textItemQuantity}    value
+      Should Be Equal As Strings    ${cartQuantity}    ${itemsQuantity}[${i}]
+    END
     
-
-
-
-
+Items Should Present In Cart    [Arguments]    &{ITEMS}
+    @{itemsName}=    Get Dictionary Keys    ${ITEMS}
+    ${listLength}=    Get Length    ${itemsName}
+    FOR    ${i}    IN RANGE    ${listLength}
+        Table Should Contain    ${table_cart_summary}    ${itemsName}[${i}]    
+    END
+    
+Product Prices Should Be The Same In Cart    [Arguments]    &{ITEMS}
+    @{itemsName}=    Get Dictionary Keys    ${ITEMS}
+    ${listLength}=    Get Length    ${itemsName}
+    FOR    ${i}    IN RANGE    ${listLength}
+      ${itemPrice}=    Replace String    ${span_cart_price}    ::PLACEHOLDER::    ${PRICES}[${i}]
+      Should Be Equal As Strings    ${itemPrice}    ${itemsName}[${i}]
+    END
+    
 
 Results Should Be Relevant    [Arguments]    ${search}
     [Documentation]
@@ -129,6 +148,8 @@ Results Should Be Relevant    [Arguments]    ${search}
            ${titleAttr}=    Get Element Attribute     ${elements}[${i}]    title
            Should Start With    ${titleAttr}    ${search}
     END
+    
+    
     
 Add Items    [Arguments]    &{ITEMS}
     [Documentation]

@@ -49,8 +49,9 @@ Add products to cart from Popular tab on Home Page
     Page should Contain Message    Product successfully added to your shopping cart
     Product Count Should Be Updated    &{ITEMS}
     Navigate To The Cart
-    Product Quantity Should Be Correct In Cart    &{ITEMS}
-    # TODO    Check Items Quantity in Cart, Check Items in Cart, Check Total Amount
+    Items Should Present In Cart    &{ITEMS}
+    Product Quantity Should Be The Same In Cart    &{ITEMS}
+    Product Prices Should Be The Same In Cart   
     Close Browser
     
 # TODO    Delete products from cart
