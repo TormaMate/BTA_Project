@@ -2,10 +2,10 @@
 Library   SeleniumLibrary
 Library   BuiltIn
 Library    String
+Library    Collections
 Variables    Variables.py
 
 *** Variables ***
-
 
 *** Keywords ***
 Input Email    [Arguments]   ${string}
@@ -81,32 +81,45 @@ Click Search Button
 Wait For Result
     Wait Until Element Is Visible    ${ul_waitforresult}
     
-Search For Printed    [Arguments]   ${searchingParameter}   
-    Validate Search    ${searchingParameter}
+    
 
+Page should Contain Message    [Arguments]   ${string}  
+      Page Should Contain    ${string} 
 
-
+Product Count Should Be Updated    [Arguments]    &{ITEMS}
+    ${sumOfItems}=    Sum Of Item Quantity    &{ITEMS}
+    Wait Until Element is Visible    ${span_product_count}
+    ${itemQuantity}=    Get Text    ${span_product_count}
+    Should be Equal As Strings    ${itemQuantity}    ${sumOfItems}
+    
+Sum Of Item Quantity    [Arguments]    &{ITEMS}
+    @{itemsQuantity}=    Get Dictionary Values    ${ITEMS}
+    ${listLength}=    Get Length    ${itemsQuantity}
+    ${sumOfItems}    Set Variable    ${0}
+    FOR    ${i}    IN RANGE    ${listLength}
+        ${sumOfItems} =    Evaluate    ${sumOfItems}+${itemsQuantity}[${i}]      
+    END
+    [Return]    ${sumOfItems}
 
 Click Popular Button
     Click Element    ${btn_popular}
 
-Add Items & Check Message And Quantit    [Arguments]    @{itemPrices}    
-    Add Items and Check    @{itemPrices}
+Add Items To The Cart    [Arguments]    &{items}    
+    Add Items    &{items}
     
-Click Cart
-    Click Element    ${btn_shoping_cart}
-    
-Wait For Cart
+Navigate To The Cart
+    Click Element    ${a_shoping_cart}
     Wait Until Element Is Visible    ${a_cart_title}
     
-Check Product Quantity In The Cart    [Arguments]    @{itemPrices}
-    Check Product Quantity    @{itemPrices}
+
+Product Quantity Should Be Correct In Cart    [Arguments]    &{ITEMS}
+    
 
 
 
 
 
-Validate Search    [Arguments]    ${search}
+Results Should Be Relevant    [Arguments]    ${search}
     [Documentation]
     ...    It checks if the results of the given search term are relevant
     ...    If not, it returns an error
@@ -117,27 +130,36 @@ Validate Search    [Arguments]    ${search}
            Should Start With    ${titleAttr}    ${search}
     END
     
-Add Items and Check  [Arguments]    @{itemPrices}
+Add Items    [Arguments]    &{ITEMS}
     [Documentation]
     ...    1. The keyword gets a list of prices
     ...    2. Each prices belong to one of the popular items
     ...    3. As the for loop is looping through the list of the prices the xpath changes dynamically and refers to the belonging item.
     ...    4. The items will be added to the cart
-    ...    5. It cheks if the right quantity of items are displayed
-    ...    6. It checks if the "successfull" message is displayed
-    ${itemListLength}=    Get Length    ${itemPrices}
+    @{itemsList}=    Get Dictionary Keys    ${ITEMS}
+    @{itemsQuantity}=    Get Dictionary Values    ${ITEMS}    sort_keys=False
+    Log To Console    ${itemsQuantity}
+    ${itemListLength}=    Get Length    ${itemsList}
+    @{PRICES}=    Create List
     
     FOR    ${i}    IN RANGE    ${itemListLength}
-           Run Keyword And Ignore Error    Click Element    ${btn_close_window} 
-           Click Element    //span[text()='Add to cart' and contains(./ancestor::div/preceding-sibling::div/child::span/text(),'${itemPrices}[${i}]')]
-           Wait Until Element Is Visible    ${icon_ok}    
+           ${buttonDetailsReplaced}=    Replace String    ${btn_details}    ::PLACEHOLDER::    ${itemsList}[${i}]     
+           Click Element    ${buttonDetailsReplaced}
+           
+           Wait Until Element Is Visible    ${txt_quantity_wanted}
+           Clear Element Text    ${txt_quantity_wanted} 
+           Input Text    ${txt_quantity_wanted}    ${itemsQuantity}[${i}]
+           
+           ${textAttr}=    Get Text     ${span_price}
+           Insert Into List    ${PRICES}    ${i}    ${textAttr}  
+           
+           Click Element    ${span_add_to_cart}     
+           
+           Wait Until Element Is Visible    ${icon_ok}
+           Go Back    
     END
-        Sleep    2
-        Page Should Contain Element     //span[text()='${itemListLength}' and ./ancestor::div/@class='clearfix']        
-        Page Should Contain    Product successfully added to your shopping cart
-        Click Element    ${btn_close_window}
-        Calculate Prices    @{itemPrices}
-        
+    Click Element    ${buttonDetailsReplaced}
+    Set Global Variable    @{PRICES}      
         
 Calculate Prices    [Arguments]    @{itemPrices}
   [Documentation]
@@ -150,13 +172,7 @@ Calculate Prices    [Arguments]    @{itemPrices}
       ${totalPrice} =    Evaluate    ${totalPrice}+${itemPrices}[${i}]
       log to console  ${totalPrice}
   END
-  ${TOTAL_PRICE}    Set Global Variable    ${totalPrice}
   
-Check Product Quantity   [Arguments]    @{prices}
-    [Documentation]
-    ...    Checks if the displayed quantity of the products is correct.
-    ${itemListLength}=    Get Length    ${prices}
-    Page Should Contain Element    //span[text()='${itemListLength}' and @class='ajax_cart_quantity']
     
     
         

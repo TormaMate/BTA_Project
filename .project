@@ -20,4 +20,26 @@
 		<nature>org.robotframework.ide.eclipse.main.plugin.robotNature</nature>
 		<nature>org.python.pydev.pythonNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>libspecs/BuiltIn.py</name>
+			<type>1</type>
+			<location>C:/Users/HP/AppData/Local/Programs/Python/Python39/lib/site-packages/robot/libraries/BuiltIn.py</location>
+		</link>
+		<link>
+			<name>libspecs/Collections.py</name>
+			<type>1</type>
+			<location>C:/Users/HP/AppData/Local/Programs/Python/Python39/lib/site-packages/robot/libraries/Collections.py</location>
+		</link>
+		<link>
+			<name>libspecs/SeleniumLibrary.py</name>
+			<type>1</type>
+			<location>C:/Users/HP/AppData/Local/Programs/Python/Python39/Lib/site-packages/SeleniumLibrary/keywords/element.py</location>
+		</link>
+		<link>
+			<name>libspecs/String.py</name>
+			<type>1</type>
+			<location>C:/Users/HP/AppData/Local/Programs/Python/Python39/lib/site-packages/robot/libraries/String.py</location>
+		</link>
+	</linkedResources>
 </projectDescription>

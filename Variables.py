@@ -29,8 +29,15 @@ a_results="//a[@class='product-name' and ./ancestor::ul/@class='product_list gri
 btn_popular="//a[contains(text(),'Popular')]"
 btn_close_window="//span[@title='Close window']"
 icon_ok="//i[@class='icon-ok']"
+a_shoping_cart="//a[@title='View my shopping cart']"
 
 #Shoping Cart
-btn_shoping_cart="//a[@title='View my shopping cart']"
 a_cart_title="//h1[@id='cart_title']"
+span_product_count="//span[@class='ajax_cart_quantity']"
+
+#Item Details
+btn_details="//span[text()='More' and ./ancestor::div/preceding-sibling::h5/child::a/@title='::PLACEHOLDER::']"
+span_price="//span[@id='our_price_display']"
+span_add_to_cart="//span[contains(text(),'Add to cart')]"
+txt_quantity_wanted="//input[@id='quantity_wanted']"
 

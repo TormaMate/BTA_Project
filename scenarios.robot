@@ -5,7 +5,7 @@ Resource    CustomKeywords.robot
 
 *** Variables ***
 ${browser}    chrome
-@{itemPrices}    16.51    50.99    28.98
+&{ITEMS}    Printed Summer Dress=2    Printed Dress=1    Printed Chiffon Dress=1
 ${searchingParameter}   Printed     
 
 *** Test Cases ***
@@ -39,16 +39,17 @@ Searching for products
     Input Search Parameter    ${searchingParameter}
     Click Search Button
     Wait For Result
-    Search For Printed    ${searchingParameter}
+    Results Should Be Relevant    ${searchingParameter}
     Close Browser
     
 Add products to cart from Popular tab on Home Page
     Open Browser    http://automationpractice.com    browser=${browser}
     Click Popular Button
-    Add Items & Check Message And Quantit    @{itemPrices}
-    Click Cart
-    Wait For Cart
-    Check Product Quantity In The Cart    @{itemPrices}
+    Add Items To the Cart    &{ITEMS}
+    Page should Contain Message    Product successfully added to your shopping cart
+    Product Count Should Be Updated    &{ITEMS}
+    Navigate To The Cart
+    Product Quantity Should Be Correct In Cart    &{ITEMS}
     # TODO    Check Items Quantity in Cart, Check Items in Cart, Check Total Amount
     Close Browser
     
