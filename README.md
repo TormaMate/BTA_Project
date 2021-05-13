@@ -9,8 +9,17 @@ Requirements and Installation:
   6. Add the webdriver's folder to the PATH
   7. If you are working with RED, add the path of SeleniumLibrary/_init_.py to red.xml to provide Selenium Keywords
       
+Project Overview:
 
-Run Test Suit From CMD:  
+    - Scenarios.robot contains all the test cases
+    - CustomKeywords provides custom keywords to help execution 
+    - Objects.py contains the saved page objects in variables 
+      
+      
+
+Run Test Suit From CMD using Firefox or Chrome:  
+  
+  Default Browser can be override from CMD
   
     Firefox:
     robot --variable browser:firefox scenarios.robot
