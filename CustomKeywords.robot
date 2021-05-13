@@ -3,7 +3,7 @@ Library   SeleniumLibrary
 Library   BuiltIn
 Library    String
 Library    Collections
-Variables    Variables.py
+Variables    Objects.py
 
 *** Variables ***
 @{PRICES}

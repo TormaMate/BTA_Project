@@ -11,7 +11,7 @@ ${searchingParameter}   Printed
 *** Test Cases ***
 Successful registration
     Open Browser    http://automationpractice.com/index.php?controller=authentication&back=my-account    browser=${browser}
-    Input Email    dummydumb2@mail.com
+    Input Email    dummydumb3@mail.com
     Click Submit Button
     Wait For Form
     Select Title
