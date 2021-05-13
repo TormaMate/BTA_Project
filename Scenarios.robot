@@ -5,13 +5,13 @@ Resource    CustomKeywords.robot
 
 *** Variables ***
 ${browser}    chrome
-&{ITEMS}    Printed Summer Dress=2    Printed Dress=1    Printed Chiffon Dress=1
+&{ITEMS}    Printed Dress=1    Printed Summer Dress=2    Printed Chiffon Dress=1
 ${searchingParameter}   Printed     
 
 *** Test Cases ***
 Successful registration
     Open Browser    http://automationpractice.com/index.php?controller=authentication&back=my-account    browser=${browser}
-    Input Email    dummy@mail.com
+    Input Email    dummydumb2@mail.com
     Click Submit Button
     Wait For Form
     Select Title
@@ -31,6 +31,7 @@ Successful registration
     Wait For Login    
     User Name Should Be    Jack Dummy
     Web Location Should Be    http://automationpractice.com/index.php?controller=my-account
+    sleep    20
     Close Browser
 
     
@@ -51,12 +52,32 @@ Add products to cart from Popular tab on Home Page
     Navigate To The Cart
     Items Should Present In Cart    &{ITEMS}
     Product Quantity Should Be The Same In Cart    &{ITEMS}
-    Product Prices Should Be The Same In Cart   
+    Product Prices Should Be The Same In Cart
     Close Browser
     
-# TODO    Delete products from cart
-    
+Delete products from cart
+    Open Browser    http://automationpractice.com    browser=${browser}
+    Click Popular Button
+    Add Items To the Cart    &{ITEMS}
+    Navigate To The Cart
+    Price Should Be Decreasing
+    Delete Items
+    Shopping Cart Empty Statement Should Be Visible 
+    Close Browser
 
-# TODO    Purchase products with bank wire
-    
+Purchase products with bank wire
+    Open Browser    http://automationpractice.com/index.php?controller=authentication&back=my-account    browser=${browser}
+    Input Login Email    test@bta.com
+    Input Login Password    123456
+    Go To    http://automationpractice.com/index.php
+    Click Popular Button
+    Add Items To the Cart    &{ITEMS}
+    Navigate To The Cart
+    Click Proceed
+    Click Proceed
+    Agree Terms
+    Click Proceed
+    Click Bankwire
+    Click Confirm
+    Order Reference Should Be The Same
      

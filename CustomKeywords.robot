@@ -11,6 +11,28 @@ Variables    Variables.py
 Input Email    [Arguments]   ${string}
     Input Text    ${txt_email}    ${string}
     
+Input Login Email    [Arguments]   ${string}
+    Input Text    ${txt_login_email}    ${string}
+    
+Input Login Password    [Arguments]   ${string}
+    Input Text    ${txt_login_password}    ${string}
+    
+Click Proceed
+    #TODO xpath doesn't work properly due element attribute incosistency. 
+    # 
+    sleep    2
+    Click Element    btn_proceed
+    
+Click Confirm
+    sleep    2
+    Click Element    btn_confirm
+    
+Click Bankwire
+    Click Element    ${btn_bank_wire}
+    
+Agree Terms
+    Select Checkbox    ${checkbox_agree_terms}
+    
 Click Submit Button
     Click Element    ${btn_submitCreate}
     
@@ -69,9 +91,6 @@ User Name Should Be    [Arguments]   ${string}
 Web Location Should Be    [Arguments]   ${string}
     Location Should Be    ${string}    
 
-
-
-
 Input Search Parameter     [Arguments]   ${searchingParameter}       
     Input Text    ${txt_search}    ${searchingParameter}
     
@@ -80,20 +99,23 @@ Click Search Button
     
 Wait For Result
     Wait Until Element Is Visible    ${ul_waitforresult}
-    
-    
+     
 
 Page should Contain Message    [Arguments]   ${string}  
       Page Should Contain    ${string} 
 
 Product Count Should Be Updated    [Arguments]    &{ITEMS}
+    [Documentation]
+    ...    It checks if the product quantity is properly displayed
     ${sumOfItems}=    Sum Of Item Quantity    &{ITEMS}
     Wait Until Element is Visible    ${span_product_count}
     ${itemQuantity}=    Get Text    ${span_product_count}
     Should be Equal As Strings    ${itemQuantity}    ${sumOfItems}
     
 Sum Of Item Quantity    [Arguments]    &{ITEMS}
-    @{itemsQuantity}=    Get Dictionary Values    ${ITEMS}
+    [Documentation]
+    ...    It executes the calculation for 'Product Count Should Be Updated' 
+    @{itemsQuantity}=    Get Dictionary Values    ${ITEMS}    sort_keys=False
     ${listLength}=    Get Length    ${itemsQuantity}
     ${sumOfItems}    Set Variable    ${0}
     FOR    ${i}    IN RANGE    ${listLength}
@@ -113,8 +135,10 @@ Navigate To The Cart
     
 
 Product Quantity Should Be The Same In Cart    [Arguments]    &{ITEMS}
+    [Documentation]
+    ...    Check the quantity of each products in the cart
     @{itemsQuantity}=    Get Dictionary Values    ${ITEMS}    sort_keys=False
-    @{itemsName}=    Get Dictionary Keys    ${ITEMS}
+    @{itemsName}=    Get Dictionary Keys    ${ITEMS}    sort_keys=False
     ${listLength}=    Get Length    ${itemsQuantity}
     FOR    ${i}    IN RANGE    ${listLength}
       ${textItemQuantity}=    Replace String    ${txt_quantity}    ::PLACEHOLDER::    ${itemsName}[${i}]
@@ -123,14 +147,16 @@ Product Quantity Should Be The Same In Cart    [Arguments]    &{ITEMS}
     END
     
 Items Should Present In Cart    [Arguments]    &{ITEMS}
-    @{itemsName}=    Get Dictionary Keys    ${ITEMS}
+    @{itemsName}=    Get Dictionary Keys    ${ITEMS}    sort_keys=False
     ${listLength}=    Get Length    ${itemsName}
     FOR    ${i}    IN RANGE    ${listLength}
         Table Should Contain    ${table_cart_summary}    ${itemsName}[${i}]    
     END
     
 Product Prices Should Be The Same In Cart    [Arguments]    &{ITEMS}
-    @{itemsName}=    Get Dictionary Keys    ${ITEMS}
+    [Documentation]
+    ...    It checks if the product prices are the same
+    @{itemsName}=    Get Dictionary Keys    ${ITEMS}    sort_keys=False
     ${listLength}=    Get Length    ${itemsName}
     FOR    ${i}    IN RANGE    ${listLength}
       ${itemPrice}=    Replace String    ${span_cart_price}    ::PLACEHOLDER::    ${PRICES}[${i}]
@@ -139,9 +165,6 @@ Product Prices Should Be The Same In Cart    [Arguments]    &{ITEMS}
     
 
 Results Should Be Relevant    [Arguments]    ${search}
-    [Documentation]
-    ...    It checks if the results of the given search term are relevant
-    ...    If not, it returns an error
     @{elements}=    Get WebElements    ${a_results}
     ${listLength}=    Get Length    ${elements}
     FOR    ${i}    IN RANGE    ${listLength}
@@ -153,11 +176,13 @@ Results Should Be Relevant    [Arguments]    ${search}
     
 Add Items    [Arguments]    &{ITEMS}
     [Documentation]
-    ...    1. The keyword gets a list of prices
-    ...    2. Each prices belong to one of the popular items
-    ...    3. As the for loop is looping through the list of the prices the xpath changes dynamically and refers to the belonging item.
-    ...    4. The items will be added to the cart
-    @{itemsList}=    Get Dictionary Keys    ${ITEMS}
+    ...    1. The keyword gets a dictionary which contains the items name and quantity 
+    ...    2. It navigates to the product details by item name and puts the quantity into the input field
+    ...    3. It puts the item into the cart
+    ...    4. It repeats the process untill all of the items are in the cart
+    ...     
+    @{itemsList}=    Get Dictionary Keys    ${ITEMS}    sort_keys=False
+    Log To Console    ${itemsList}
     @{itemsQuantity}=    Get Dictionary Values    ${ITEMS}    sort_keys=False
     Log To Console    ${itemsQuantity}
     ${itemListLength}=    Get Length    ${itemsList}
@@ -171,32 +196,61 @@ Add Items    [Arguments]    &{ITEMS}
            Clear Element Text    ${txt_quantity_wanted} 
            Input Text    ${txt_quantity_wanted}    ${itemsQuantity}[${i}]
            
-           ${textAttr}=    Get Text     ${span_price}
-           Insert Into List    ${PRICES}    ${i}    ${textAttr}  
+           Get And Save Item Prices    ${PRICES}    ${i}
            
            Click Element    ${span_add_to_cart}     
            
            Wait Until Element Is Visible    ${icon_ok}
            Go Back    
     END
-    Click Element    ${buttonDetailsReplaced}
-    Set Global Variable    @{PRICES}      
-        
-Calculate Prices    [Arguments]    @{itemPrices}
-  [Documentation]
-  ...   It Calculates and returns the sum of the item prices added to the shoping cart 
-  ...     
-  ${totalPrice} =    set variable    ${0}
-  ${productPrice} =    set variable    ${0}
-  ${itemListLength}=    Get Length    ${itemPrices}
-  FOR    ${i}    IN RANGE    ${itemListLength}
-      ${totalPrice} =    Evaluate    ${totalPrice}+${itemPrices}[${i}]
-      log to console  ${totalPrice}
-  END
-  
-    
-    
-        
-    
+    Click Element    ${buttonDetailsReplaced}      
 
+Get and Save Item Prices    [Arguments]    ${PRICES}    ${i}
+    [Documentation]
+    ...    it gets and saves the item prices in a global list for assertion
+    ${textAttr}=    Get Text     ${span_price}
+    Insert Into List    ${PRICES}    ${i}    ${textAttr}
+    Set Global Variable    @{PRICES}
+      
+ Delete Items     
+    FOR    ${i}    IN RANGE    100
+        ${isTrashIconPresent}=    Run Keyword And Return Status    Page Should Contain Element    ${a_substract}
+        Exit For Loop If    ${isTrashIconPresent} == False
+        Click Element    ${a_substract}
+        sleep    5      
+    END
+
+Price Should Be Decreasing
+    ${unitePrice}=    Get Text    ${span_unit_price}  
+    ${unitePrice}=    Remove String    ${unitePrice}    $
+    Log To Console    ${unitePrice}
     
+    ${totalPriceBefore}=    Get Text    ${span_total_price}  
+    ${totalPriceBefore}=    Remove String    ${totalPriceBefore}    $
+    Log To Console    ${totalPriceBefore}
+    
+    ${totalPriceBefore}=    Evaluate    ${totalPriceBefore}-${unitePrice}
+    Log To Console    ${totalPriceBefore}    
+
+    Click Element    ${a_substract}
+    sleep    4        
+
+    ${totalPrice}=    Get Text    ${span_total_price}  
+    ${totalPrice}=    Remove String    ${totalPrice}    $
+    Log To Console    ${totalPrice}
+    
+    Should Be Equal As Strings    ${totalPriceBefore}    ${totalPrice}    
+    
+ Shopping Cart Empty Statement Should Be Visible
+     Element Should Be Visible    ${p_warning} 
+     
+Order Reference Should Be The Same
+    [Documentation]
+    ...    It saves the order reference using regexp and checks if it is the same on "My Orders" page
+    ...    
+    ${getOrderReference}=    Get text    div_details_text
+    ${getOrderReference}=    Get Regexp Matches    ${getOrderReference}    [A-Z]{9}
+    
+    Click Element    ${a_myorders}
+    Page Should Contain    ${getOrderReference}   
+           

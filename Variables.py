@@ -15,6 +15,8 @@ txt_postcode="//input[@id='postcode']"
 txt_phone="//input[@id='phone']"
 txt_alias="//input[@id='alias']"
 btn_submitAccount="//button[@id='submitAccount']"
+txt_login_email="//input[@id='email']"
+txt_login_password="//input[@id='passwd']"
 
 #Account page
 span_account="//span[./ancestor::a/@class='account']"
@@ -37,10 +39,24 @@ span_product_count="//span[@class='ajax_cart_quantity']"
 txt_quantity="//input[./ancestor::td/preceding-sibling::td/descendant::a/text()='::PLACEHOLDER::']"
 table_cart_summary="//table[@id='cart_summary']"
 span_cart_price="//span[@class='price' and ./ancestor::td/@data-title='Unit price' and ./ancestor::td/preceding-sibling::td/descendant::a/text()='::PLACEHOLDER::']"
+span_unit_price="//span[@class='price' and ./ancestor::span/@class='price']"
+span_total_price="//span[@id='total_price']"
+a_substract="//a[@title='Subtract']"
+p_warning="//p[@class='alert alert-warning' and text()='Your shopping cart is empty.']"
+
+#Payment
+checkbox_agree_terms="//input[@name='cgv']"
+btn_proceed="//*[self::button or self::p or self::a][@name='processAddress' or @name='processCarrier' or @class='cart_navigation button' or @title='Proceed to checkout']"
+btn_bank_wire="//a[@title='Pay by bank wire']"
+btn_confirm="//a[@title='Proceed to checkout']"
+div_details_text="//div[@class='box']"
 
 #Item Details
 btn_details="//span[text()='More' and ./ancestor::div/preceding-sibling::h5/child::a/@title='::PLACEHOLDER::']"
 span_price="//span[@id='our_price_display']"
 span_add_to_cart="//span[contains(text(),'Add to cart')]"
 txt_quantity_wanted="//input[@id='quantity_wanted']"
+
+#Footer
+a_myorders="//a[text()='My orders']"
 
