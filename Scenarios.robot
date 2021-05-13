@@ -3,6 +3,8 @@ Library    BuiltIn
 Library    SeleniumLibrary
 Resource    CustomKeywords.robot
 
+Test Teardown      Close Browser
+
 *** Variables ***
 ${browser}    chrome
 &{ITEMS}    Printed Dress=1    Printed Summer Dress=2    Printed Chiffon Dress=1
@@ -11,7 +13,7 @@ ${searchingParameter}   Printed
 *** Test Cases ***
 Successful registration
     Open Browser    http://automationpractice.com/index.php?controller=authentication&back=my-account    browser=${browser}
-    Input Email    dummydumb3@mail.com
+    Input Email    dummydumb49@mail.com
     Click Submit Button
     Wait For Form
     Select Title
@@ -31,8 +33,6 @@ Successful registration
     Wait For Login    
     User Name Should Be    Jack Dummy
     Web Location Should Be    http://automationpractice.com/index.php?controller=my-account
-    sleep    20
-    Close Browser
 
     
 Searching for products
@@ -41,7 +41,6 @@ Searching for products
     Click Search Button
     Wait For Result
     Results Should Be Relevant    ${searchingParameter}
-    Close Browser
     
 Add products to cart from Popular tab on Home Page
     Open Browser    http://automationpractice.com    browser=${browser}
@@ -53,7 +52,6 @@ Add products to cart from Popular tab on Home Page
     Items Should Present In Cart    &{ITEMS}
     Product Quantity Should Be The Same In Cart    &{ITEMS}
     Product Prices Should Be The Same In Cart
-    Close Browser
     
 Delete products from cart
     Open Browser    http://automationpractice.com    browser=${browser}
@@ -63,7 +61,6 @@ Delete products from cart
     Price Should Be Decreasing
     Delete Items
     Shopping Cart Empty Statement Should Be Visible 
-    Close Browser
 
 Purchase products with bank wire
     Open Browser    http://automationpractice.com/index.php?controller=authentication&back=my-account    browser=${browser}
